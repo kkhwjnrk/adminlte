@@ -1,13 +1,13 @@
 <?php
-include('koneksi.php');
+include('../controller/koneksi.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $userID = $_POST['user_id'];
+  $userID = $_POST['id_user'];
   $username = $_POST['username'];
   $password = $_POST['password'];
   $status = $_POST['status'];
 
-  $stmt = $conn->prepare("UPDATE tb_user SET username=?, password=?, status=? WHERE user_id=?");
+  $stmt = $conn->prepare("UPDATE tb_user SET username=?, password=?, status=? WHERE id_user=?");
   $stmt->bind_param("ssss", $username, $password, $status, $userID);
 
   if ($stmt->execute()) {

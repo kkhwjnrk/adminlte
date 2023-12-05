@@ -1,37 +1,47 @@
 import { sendGetRequest, sendPostRequest } from './ajax-handler.js';
 
-export function loadData(table, updateUserID) {
-  const url = "./controller/load-data.php";
-  sendGetRequest(url, function (response) {
-    table.querySelector("tbody").innerHTML = response;
-    updateUserID();
-  });
-}
+function createCrudFunctions(entity) {
+  return {
+    loadData: function (table, updateEntityID) {
+      const url = `./app/${entity}/load-data-${entity}.php`;
+      sendGetRequest(url, function (response) {
+        table.querySelector("tbody").innerHTML = response;
+        updateEntityID();
+      });
+    },
 
-export function addData(formData, callback) {
-  const url = "./controller/add-data.php";
-  sendPostRequest(url, formData, callback);
-}
+    addData: function (formData, callback) {
+      const url = `./app/${entity}/add-${entity}.php`;
+      sendPostRequest(url, formData, callback);
+    },
 
-export function deleteData(formData, callback) {
-  const url = "./controller/delete-data.php";
-  sendPostRequest(url, formData, callback);
-}
+    editData: function (formData, callback) {
+      const url = `./app/${entity}/edit-${entity}.php`;
+      sendPostRequest(url, formData, callback);
+    },
 
-export function editData(formData, callback) {
-  const url = "./controller/edit-data.php";
-  sendPostRequest(url, formData, callback);
-}
+    loadEditFormData: function (entityID, callback) {
+      const url = `./app/${entity}/get-${entity}.php?id_${entity}=${entityID}`;
+      sendGetRequest(url, function (response) {
+        const entityData = JSON.parse(response);
+        callback(entityData);
+      });
+    },
 
-export function loadEditFormData(userID, callback) {
-  const url = `./controller/get-user.php?user_id=${userID}`;
-  sendGetRequest(url, function (response) {
-    const userData = JSON.parse(response);
-    callback(userData);
-  });
+    deleteData: function (formData, callback) {
+      const url = `./app/${entity}/delete-${entity}.php`;
+      sendPostRequest(url, formData, callback);
+    },
+
+    entity: entity,
+  };
 }
 
 export function login(formData, callback) {
-  const url = "./controller/login-process.php";
+  const url = "./app/controller/login-process.php";
   sendPostRequest(url, formData, callback);
 }
+
+export const userCrud = createCrudFunctions('user');
+export const barangCrud = createCrudFunctions('barang');
+export const satuanCrud = createCrudFunctions('satuan');

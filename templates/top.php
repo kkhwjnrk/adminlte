@@ -1,4 +1,4 @@
-<?php include './controller/koneksi.php' ?>
+<?php include './app/controller/koneksi.php' ?>
 
 <!DOCTYPE html>
 <html lang="en">

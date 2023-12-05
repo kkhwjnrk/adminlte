@@ -1,11 +1,11 @@
 <?php
-include('koneksi.php');
+include('../controller/koneksi.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  $userID = $_GET['user_id'];
+  $satuanID = $_GET['id_satuan'];
 
-  $stmt = $conn->prepare("SELECT user_id, username, password, status FROM tb_user WHERE user_id = ?");
-  $stmt->bind_param("s", $userID);
+  $stmt = $conn->prepare("SELECT id_satuan, satuan FROM tb_satuan WHERE id_satuan = ?");
+  $stmt->bind_param("s", $satuanID);
   $stmt->execute();
   $result = $stmt->get_result();
 

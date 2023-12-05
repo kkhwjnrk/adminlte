@@ -1,14 +1,14 @@
 <?php
-include('koneksi.php');
+include('../controller/koneksi.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $userID = $_POST['user_id'];
+  $userID = $_POST['id_user'];
   $username = $_POST['username'];
   $password = $_POST['password'];
   $status = $_POST['status'];
 
   error_log(print_r($_POST, true));
-  $stmt = $conn->prepare("INSERT INTO tb_user (user_id, username, password, status) VALUES (?, ?, ?, ?)");
+  $stmt = $conn->prepare("INSERT INTO tb_user (id_user, username, password, status) VALUES (?, ?, ?, ?)");
   $stmt->bind_param("ssss", $userID, $username, $password, $status);
 
   if ($stmt->execute()) {
