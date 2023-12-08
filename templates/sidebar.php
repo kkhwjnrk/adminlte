@@ -36,8 +36,8 @@
           </a>
         </li>
 
-        <li class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'penjualan.php') ? 'menu-open' : ''; ?>">
-          <a href="#" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'penjualan.php') ? 'active' : ''; ?>">
+        <li class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'barang-masuk.php') ? 'menu-open' : ''; ?>">
+          <a href="#" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'barang-masuk.php') ? 'active' : ''; ?>" data-toggle="tab">
             <i class="nav-icon far fa-envelope"></i>
             <p>
               Transaksi
@@ -46,9 +46,9 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'penjualan.php') ? 'active' : ''; ?>">
+              <a href="barang-masuk.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'barang-masuk.php') ? 'active' : ''; ?>" id="masukTab">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Penjualan</p>
+                <p>Barang Masuk</p>
               </a>
             </li>
           </ul>

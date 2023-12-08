@@ -3,7 +3,7 @@ import { sendGetRequest, sendPostRequest } from './ajax-handler.js';
 function createCrudFunctions(entity) {
   return {
     loadData: function (table, updateEntityID) {
-      const url = `./app/${entity}/load-data-${entity}.php`;
+      const url = `./app/${entity}/load-${entity}.php`;
       sendGetRequest(url, function (response) {
         table.querySelector("tbody").innerHTML = response;
         updateEntityID();
@@ -45,3 +45,4 @@ export function login(formData, callback) {
 export const userCrud = createCrudFunctions('user');
 export const barangCrud = createCrudFunctions('barang');
 export const satuanCrud = createCrudFunctions('satuan');
+export const masukCrud = createCrudFunctions('masuk');

@@ -21,7 +21,7 @@ if ($result->num_rows > 0) {
     $no++;
   }
 } else {
-  echo "<tr><td class='text-center' colspan='4'>Tidak ada data pengguna</td></tr>";
+  echo "<tr><td class='text-center' colspan='4'>Tidak ada data satuan</td></tr>";
 }
 
 $conn->close();

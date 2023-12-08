@@ -1,13 +1,16 @@
-import { userCrud, barangCrud, satuanCrud } from './crud-handler.js';
+import { userCrud, barangCrud, satuanCrud, masukCrud } from './crud-handler.js';
 import { updateEntityID, closeModal, updateDeleteButtonDataTarget } from './ui-handler.js';
 
 document.addEventListener("DOMContentLoaded", function () {
   const tableUser = document.getElementById("tableUser");
   const tableBarang = document.getElementById("tableBarang");
   const tableSatuan = document.getElementById("tableSatuan");
+  const tableMasuk = document.getElementById("tableMasuk");
 
   const dataTableUser = new DataTable(tableUser, {});
   const dataTableBarang = new DataTable(tableBarang, {});
+  const dataTableSatuan = new DataTable(tableSatuan, {});
+  const dataTableMasuk = new DataTable(tableMasuk, {});
 
   const addUserForm = document.getElementById("addUserForm");
   const editUserForm = document.getElementById("editUserForm");
@@ -17,6 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const addSatuanForm = document.getElementById("addSatuanForm");
   const editSatuanForm = document.getElementById("editSatuanForm");
+
+  const addMasukForm = document.getElementById("addMasukForm");
+  const editMasukForm = document.getElementById("editMasukForm");
 
   if (addUserForm) {
     addUserForm.addEventListener("submit", handleAddFormSubmit.bind(null, userCrud));
@@ -28,6 +34,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (addSatuanForm) {
     addSatuanForm.addEventListener("submit", handleAddFormSubmit.bind(null, satuanCrud));
+  }
+
+  if (addMasukForm) {
+    addMasukForm.addEventListener("submit", handleAddFormSubmit.bind(null, masukCrud));
+
+    const inputIdBarang = document.getElementById("inputIdBarang");
+    const inputNama = document.getElementById("inputNama");
+    const inputStok = document.getElementById("inputStok");
+
+    inputIdBarang.addEventListener("change", function () {
+      const selectedOption = inputIdBarang.options[inputIdBarang.selectedIndex];
+      inputNama.value = selectedOption.getAttribute("data-nama");
+      inputStok.value = selectedOption.getAttribute("data-stok");
+    });
   }
 
   if (editUserForm) {
@@ -54,20 +74,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  if (editMasukForm) {
+    editMasukForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      masukCrud.editData(formData, handleResponse("diperbarui", "memperbarui", "edit-masuk"));
+    });
+  }
+
   if (document) {
     document.addEventListener("click", function (event) {
       const activeTab = document.querySelector('.nav-treeview .nav-item .nav-link.active');
-      const entity = activeTab && activeTab.id === 'userTab' ? 'user' : (activeTab && activeTab.id === 'barangTab' ? 'barang' : 'satuan');
+      const entity = activeTab && activeTab.id === 'userTab' ? 'user' :
+        activeTab && activeTab.id === 'barangTab' ? 'barang' :
+          activeTab && activeTab.id === 'satuanTab' ? 'satuan' :
+            'masuk';
+
 
       if (entity === 'user') {
         handleButtonClick(userCrud, event, entity);
-        handleEditButtonClick(userCrud, event, entity);
       } else if (entity === 'barang') {
         handleButtonClick(barangCrud, event, entity);
-        handleEditButtonClick(barangCrud, event, entity);
       } else if (entity === 'satuan') {
         handleButtonClick(satuanCrud, event, entity);
-        handleEditButtonClick(satuanCrud, event, entity);
+      } else if (entity === 'masuk') {
+        handleButtonClick(masukCrud, event, entity);
       }
     });
 
@@ -118,13 +149,22 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("editStok").value = entityData.stok;
           document.getElementById("editHarga").value = entityData.harga;
         });
+      } else if (checkboxes.length >= 2) {
+        toastr.warning("Hanya satu data yang bisa diedit.", "Peringatan");
       } else {
-        toastr.warning("Pilih satu data untuk diedit.", "Peringatan");
+        toastr.warning("Pilih setidaknya satu data untuk diedit.", "Peringatan");
       }
     } else if (entity === "satuan") {
       crud.loadEditFormData(entityID, function (entityData) {
-        document.getElementById("editIdSatuan").value = entityData.id_satuan;
+        document.getElementById("editIdmasuk").value = entityData.id_satuan;
         document.getElementById("editSatuan").value = entityData.satuan;
+      });
+    } else if (entity === "masuk") {
+      crud.loadEditFormData(entityID, function (entityData) {
+        document.getElementById("editIdMasuk").value = entityData.id_masuk;
+        document.getElementById("editTglMasuk").value = entityData.tgl_masuk;
+        document.getElementById("editIdBarang").value = entityData.id_barang;
+        document.getElementById("editJumlah").value = entityData.jumlah;
       });
     }
   }
@@ -147,8 +187,9 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         toastr.warning("Pilih setidaknya satu data untuk dihapus.", "Peringatan");
       }
-    } else if (entity === 'user' || 'satuan') {
+    } else if (entity === 'user' || 'satuan' || 'masuk') {
       const entityID = event.target.getAttribute(`data-${entity}id`);
+      console.log(entity);
       submitBtn.addEventListener("click", function () {
         const formData = new FormData();
         formData.append(`id_${entity}`, entityID);
@@ -184,6 +225,8 @@ document.addEventListener("DOMContentLoaded", function () {
       barangCrud.loadData(tableBarang, updateEntityID);
     } else if (activeTab && activeTab.id === 'satuanTab') {
       satuanCrud.loadData(tableSatuan, updateEntityID);
+    } else if (activeTab && activeTab.id === 'masukTab') {
+      masukCrud.loadData(tableMasuk, updateEntityID);
     }
   }
 
